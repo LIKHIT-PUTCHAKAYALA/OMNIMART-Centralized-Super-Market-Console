@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNI-MART Supermarket Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React and related libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.1.16/umd/Recharts.min.js"></script>
+    
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Babel for JSX Transformation -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        :root {
+            --font-main: 'Inter', sans-serif;
+            --bg-primary-light: #f3f4f6; 
+            --bg-secondary-light: #ffffff; 
+            --sidebar-bg-light: #1f2937;
+            --text-primary-light: #111827; 
+            --text-secondary-light: #4b5563; 
+            --border-light: #d1d5db;
+            --accent-light: #22c55e; /* Green 500 */
+            --accent-hover-light: #16a34a; /* Green 600 */
+            --shadow-light: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --btn-secondary-bg-light: #e5e7eb; --btn-secondary-text-light: #374151; --btn-secondary-hover-bg-light: #d1d5db;
+
+            /* Dark Theme */
+            --bg-primary-dark: #0d1117; 
+            --bg-secondary-dark: #161b22; 
+            --sidebar-bg-dark: #010409;
+            --text-primary-dark: #e6edf3; 
+            --text-secondary-dark: #8b949e; 
+            --border-dark: #30363d;
+            --accent-dark: #4ade80; /* Green 400 */
+            --accent-hover-dark: #22c55e; /* Green 500 */
+            --shadow-dark: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+            --btn-secondary-bg-dark: #21262d; --btn-secondary-text-dark: #c9d1d9; --btn-secondary-hover-bg-dark: #30363d;
+        }
+        body { font-family: var(--font-main); transition: background-color 0.3s ease, color 0.3s ease; }
+        body.light { background-color: var(--bg-primary-light); color: var(--text-primary-light); }
+        body.dark { background-color: var(--bg-primary-dark); color: var(--text-primary-dark); }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .spinner { width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite; }
+        body.light .spinner { border: 4px solid var(--border-light); border-top-color: var(--accent-light); }
+        body.dark .spinner { border: 4px solid var(--border-dark); border-top-color: var(--accent-dark); }
+        .card { transition: all 0.3s ease; border-radius: 1rem; }
+        .card:hover { transform: translateY(-5px); }
+        body.light .card { background-color: var(--bg-secondary-light); border: 1px solid var(--border-light); box-shadow: var(--shadow-light); }
+        body.dark .card { background-color: var(--bg-secondary-dark); border-color: var(--border-dark); box-shadow: var(--shadow-dark); }
+        .btn { border-radius: 0.75rem; font-weight: 600; transition: all 0.2s ease; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); padding: 0.5rem 1rem; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); }
+        .btn-primary { color: white; }
+        body.light .btn-primary { background-color: var(--accent-light); } body.light .btn-primary:hover { background-color: var(--accent-hover-light); }
+        body.dark .btn-primary { background-color: var(--accent-dark); color: #0d1117; } body.dark .btn-primary:hover { background-color: var(--accent-hover-dark); }
+        .btn-secondary { transition: all 0.2s ease; }
+        body.light .btn-secondary { background-color: var(--btn-secondary-bg-light); color: var(--btn-secondary-text-light); }
+        body.light .btn-secondary:hover { background-color: var(--btn-secondary-hover-bg-light); }
+        body.dark .btn-secondary { background-color: var(--btn-secondary-bg-dark); color: var(--btn-secondary-text-dark); }
+        body.dark .btn-secondary:hover { background-color: var(--btn-secondary-hover-bg-dark); }
+        .form-input { border-radius: 0.75rem; transition: all 0.2s ease; padding: 0.75rem 1rem; width: 100%; }
+        body.light .form-input { background-color: #f9fafb; border: 1px solid var(--border-light); color: var(--text-primary-light); }
+        body.dark .form-input { background-color: #0d1117; border: 1px solid var(--border-dark); color: var(--text-primary-dark); }
+        .form-input:focus { outline: none; box-shadow: 0 0 0 2px var(--accent-light); }
+        body.dark .form-input:focus { box-shadow: 0 0 0 2px var(--accent-dark); }
+        .glass-modal-container { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .glass-modal-content { border-radius: 1rem; padding: 2rem; box-shadow: var(--shadow-dark); }
+        body.light .glass-modal-content { background-color: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255, 255, 255, 0.4); }
+        body.dark .glass-modal-content { background-color: rgba(22, 27, 34, 0.85); border: 1px solid var(--border-dark); }
+        @media print { body * { visibility: hidden; } .printable-area, .printable-area * { visibility: visible; } .printable-area { position: absolute; left: 0; top: 0; width: 100%; } .no-print { display: none; } }
+        .page-background-logo { position: relative; z-index: 1; }
+        .page-background-logo::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; height: 80%;
+            background-image: var(--bg-logo-url);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: var(--bg-logo-opacity);
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <div id="pdf-container" style={{ position: 'absolute', left: '-9999px', zIndex: -1 }}></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useCallback } = React;
+        const { jsPDF } = window.jspdf;
+        const { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = window.Recharts;
+        
+        const Spinner = () => (
+            <div className="flex justify-center items-center h-full w-full p-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
+            </div>
+        );
+
+        const ActionModal = ({ title, message, onConfirm, onCancel, confirmText = "Confirm", cancelText = "Cancel", showCancel = true }) => (
+            <div className="fixed inset-0 flex items-center justify-center z-50 glass-modal-container fade-in">
+                <div className="w-full max-w-sm mx-auto glass-modal-content">
+                    <h2 className="text-xl font-bold mb-4">{title}</h2>
+                    <p className="mb-6">{message}</p>
+                    <div className="flex justify-end space-x-3">
+                        {showCancel && <button onClick={onCancel} className="btn btn-secondary">{cancelText}</button>}
+                        <button onClick={onConfirm} className="btn btn-primary">{confirmText}</button>
+                    </div>
+                </div>
+            </div>
+        );
+        
+        const useTableData = (initialData) => {
+            const [searchTerm, setSearchTerm] = useState('');
+            const [filters, setFilters] = useState({});
+            const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+
+            const setFilter = useCallback((key, value) => {
+                setFilters(prev => ({ ...prev, [key]: value }));
+            }, []);
+
+            const sortedAndFilteredData = useMemo(() => {
+                let data = Object.entries(initialData);
+
+                if (Object.keys(filters).length > 0) {
+                    data = data.filter(([id, item]) => {
+                        if (!item) return false;
+                        for (const key in filters) {
+                            if (filters[key] === 'all' || !filters[key]) continue;
+                            
+                            if (key === 'stock') {
+                                if (filters[key] === 'in_stock' && item.stock <= 0) return false;
+                                if (filters[key] === 'out_of_stock' && item.stock > 0) return false;
+                                continue;
+                            }
+
+                            if (item[key] !== filters[key]) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+                }
+                
+                if (searchTerm) {
+                    data = data.filter(([id, item]) => 
+                        item && Object.values(item).some(value => 
+                            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+                        ) || String(id).toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                }
+
+                if (sortConfig.key) {
+                    data.sort(([idA, a], [idB, b]) => {
+                        if (!a || !b) return 0;
+                        let valA = sortConfig.key === 'id' ? idA : a[sortConfig.key];
+                        let valB = sortConfig.key === 'id' ? idB : b[sortConfig.key];
+                        
+                        if (typeof valA === 'number' && typeof valB === 'number') {
+                            return sortConfig.direction === 'ascending' ? valA - valB : valB - valA;
+                        }
+
+                        const strA = String(valA);
+                        const strB = String(valB);
+                        
+                        const numA = parseFloat(strA.replace(/[^0-9.-]/g, ''));
+                        const numB = parseFloat(strB.replace(/[^0-9.-]/g, ''));
+                        
+                        if (!isNaN(numA) && !isNaN(numB) && numA !== numB) {
+                            return sortConfig.direction === 'ascending' ? numA - numB : numB - numA;
+                        }
+
+                        if (strA.toLowerCase() < strB.toLowerCase()) {
+                            return sortConfig.direction === 'ascending' ? -1 : 1;
+                        }
+                        if (strA.toLowerCase() > strB.toLowerCase()) {
+                            return sortConfig.direction === 'ascending' ? 1 : -1;
+                        }
+                        return 0;
+                    });
+                }
+                return data;
+            }, [initialData, searchTerm, sortConfig, filters]);
+            
+            const requestSort = (key) => {
+                let direction = 'ascending';
+                if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+                    direction = 'descending';
+                }
+                setSortConfig({ key, direction });
+            };
+
+            return { data: sortedAndFilteredData, setSearchTerm, requestSort, sortConfig, setFilter };
+        };
+        
+        const App = () => {
+            const [user, setUser] = useState(null);
+            const [currentPage, setCurrentPage] = useState('login');
+            const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+            const [brandSettings, setBrandSettings] = useState(null);
+            const [appStatus, setAppStatus] = useState('idle');
+
+            useEffect(() => {
+                document.body.className = theme;
+                if (brandSettings) {
+                    document.documentElement.style.setProperty('--bg-logo-url', `url(${brandSettings.logo})`);
+                    document.documentElement.style.setProperty('--bg-logo-opacity', brandSettings.backgroundOpacity);
+                }
+            }, [theme, brandSettings]);
+
+            const fetchBrandSettings = useCallback(async (retries = 5) => {
+                setAppStatus('loading');
+                try {
+                    const response = await fetch('http://localhost:3005/settings');
+                    if (!response.ok) throw new Error("Settings fetch failed");
+                    setBrandSettings(await response.json());
+                    setAppStatus('ready');
+                } catch (e) {
+                    if (retries > 0) {
+                        setTimeout(() => fetchBrandSettings(retries - 1), 1500);
+                    } else {
+                        console.error("Could not fetch brand settings after multiple attempts.");
+                        setAppStatus('error');
+                    }
+                }
+            }, []);
+            
+            const handleLogin = (userData) => {
+                setUser(userData);
+                setCurrentPage(userData.allowedPages[0] || 'login');
+                fetchBrandSettings();
+            };
+
+            const handleLogout = () => {
+                setUser(null);
+                setCurrentPage('login');
+                setAppStatus('idle');
+            };
+            
+            const navigateTo = (page) => setCurrentPage(page);
+
+            const renderPage = () => {
+                if (!user || currentPage === 'login') {
+                    return <LoginPage onLogin={handleLogin} />;
+                }
+
+                if (appStatus === 'loading') {
+                    return (
+                        <div className="flex flex-col items-center justify-center h-screen">
+                             <Spinner />
+                             <p className="mt-4">Connecting to services...</p>
+                        </div>
+                    );
+                }
+
+                if (appStatus === 'error') {
+                    return (
+                        <div className="flex items-center justify-center h-screen">
+                            <div className="card p-8 text-center max-w-md mx-auto">
+                                 <i className="fas fa-exclamation-triangle text-5xl text-red-500 mb-4"></i>
+                                 <h2 className="text-2xl font-bold">Connection Error</h2>
+                                 <p className="mt-2">Could not connect to the system services.</p>
+                                 <p className="mt-1 text-sm text-gray-500">Please ensure all services are running via the launcher and try again.</p>
+                                 <button onClick={handleLogout} className="btn btn-primary mt-6 py-2 px-4">Logout</button>
+                             </div>
+                        </div>
+                    );
+                }
+                
+                return (
+                    <MainLayout user={user} onLogout={handleLogout} navigateTo={navigateTo} currentPage={currentPage} theme={theme} setTheme={setTheme} brandSettings={brandSettings}>
+                        <div className="fade-in w-full h-full">
+                        {
+                            {
+                                'dashboard': <DashboardPage user={user}/>,
+                                'pos': <POSPage user={user} billSettings={brandSettings}/>,
+                                'inventory': <InventoryPage user={user}/>,
+                                'orders': <OrdersPage user={user} billSettings={brandSettings}/>,
+                                'users': <UsersPage user={user}/>,
+                                'suppliers': <SuppliersPage user={user}/>,
+                                'settings': <SettingsPage user={user} onSettingsUpdate={fetchBrandSettings} currentSettings={brandSettings}/>
+                            }[currentPage]
+                        }
+                        </div>
+                    </MainLayout>
+                );
+            };
+
+            return renderPage();
+        };
+
+        const MainLayout = ({ user, onLogout, navigateTo, currentPage, children, theme, setTheme, brandSettings }) => {
+            const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+            const allNavItems = [
+                { id: 'dashboard', name: 'Dashboard', icon: 'fa-chart-pie' },
+                { id: 'pos', name: 'Point of Sale', icon: 'fa-cash-register' },
+                { id: 'inventory', name: 'Inventory', icon: 'fa-boxes-stacked' },
+                { id: 'orders', name: 'Orders', icon: 'fa-receipt' },
+                { id: 'users', name: 'Users', icon: 'fa-users-cog' },
+                { id: 'suppliers', name: 'Suppliers', icon: 'fa-truck' },
+                { id: 'settings', name: 'Settings', icon: 'fa-cog' },
+            ];
+            const filteredNavItems = allNavItems.filter(item => user.allowedPages.includes(item.id));
+            
+            const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
+
+            return (
+                <div className="flex h-screen">
+                    <div className={`text-white flex flex-col justify-between transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-20'}`} style={{ backgroundColor: theme === 'light' ? 'var(--sidebar-bg-light)' : 'var(--sidebar-bg-dark)'}}>
+                        <div>
+                            <div className="flex items-center justify-center h-20 px-2">
+                                {brandSettings && brandSettings.logo ? (
+                                    <img src={brandSettings.logo} alt="Logo" className={`transition-all duration-300 ${isSidebarOpen ? 'h-12' : 'h-8'}`} />
+                                ) : (
+                                    <i className={`fas fa-shopping-basket text-3xl text-green-400 ${!isSidebarOpen && 'mx-auto'}`}></i>
+                                )}
+                                {isSidebarOpen && <h1 className="text-xl font-bold ml-2">{brandSettings ? brandSettings.storeName : 'OMNI-MART'}</h1>}
+                            </div>
+                            <nav className="mt-10">
+                                {filteredNavItems.map(item => (
+                                    <a key={item.id} href="#" onClick={() => navigateTo(item.id)} className={`flex items-center py-4 px-6 relative ${isSidebarOpen ? '' : 'justify-center'} text-gray-300 hover:text-white transition-colors duration-200`}>
+                                        {currentPage === item.id && <span className="absolute left-0 top-0 h-full w-1" style={{backgroundColor: 'var(--accent-light)'}}></span>}
+                                        <i className={`fas ${item.icon} text-lg`}></i>
+                                        {isSidebarOpen && <span className="ml-4">{item.name}</span>}
+                                    </a>
+                                ))}
+                            </nav>
+                        </div>
+                        <div className="p-4 border-t" style={{ borderColor: 'var(--border-dark)'}}>
+                            <button onClick={toggleTheme} className="w-full flex items-center justify-center py-3 px-4 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 mb-4">
+                               <i className={`fas ${theme === 'light' ? 'fa-moon' : 'fa-sun'} text-lg`}></i>
+                               {isSidebarOpen && <span className="ml-4">Toggle Theme</span>}
+                            </button>
+                            <div className="flex items-center">
+                                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center font-bold">
+                                    {user.name.charAt(0)}
+                                </div>
+                                {isSidebarOpen && (
+                                    <div className="ml-3">
+                                        <p className="text-sm font-semibold">{user.name}</p>
+                                        <p className="text-xs text-gray-400 capitalize">{user.role}</p>
+                                    </div>
+                                )}
+                            </div>
+                             <button onClick={onLogout} className="w-full mt-4 flex items-center justify-center py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white transition-all duration-200">
+                                <i className="fas fa-sign-out-alt"></i>
+                                {isSidebarOpen && <span className="ml-2">Logout</span>}
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex flex-col overflow-hidden">
+                        <header className="card flex justify-between items-center p-4 border-b-0 m-8 mb-0 hover:transform-none">
+                            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="focus:outline-none text-gray-500">
+                                <i className="fas fa-bars text-2xl"></i>
+                            </button>
+                            <h1 className="text-2xl font-semibold capitalize">{currentPage}</h1>
+                            <div className="w-8"></div>
+                        </header>
+                        <main className="flex-1 overflow-x-hidden overflow-y-auto p-8 page-background-logo">
+                           {children}
+                        </main>
+                    </div>
+                </div>
+            );
+        };
+        
+        const LoginPage = ({ onLogin }) => {
+            const [username, setUsername] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+            const [brandSettings, setBrandSettings] = useState(null);
+
+            const fetchSettings = useCallback(async (retries = 5) => {
+                try {
+                    const response = await fetch('http://localhost:3005/settings');
+                    if (!response.ok) throw new Error("Failed to fetch settings for login page");
+                    setBrandSettings(await response.json());
+                } catch (e) {
+                    if (retries > 0) {
+                        setTimeout(() => fetchSettings(retries - 1), 1000);
+                    } else {
+                        console.error("Could not fetch brand settings for login page after multiple attempts.");
+                    }
+                }
+            }, []);
+
+            useEffect(() => {
+                fetchSettings();
+            }, [fetchSettings]);
+
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setError('');
+                setIsLoading(true);
+                try {
+                    const response = await fetch('http://localhost:3001/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        onLogin(data.user);
+                    } else {
+                        setError(data.message || 'Invalid credentials');
+                    }
+                } catch (err) {
+                     setError('Failed to connect to the server. Please ensure the authentication service is running.');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            return (
+                 <div className="min-h-screen flex items-center justify-center bg-gray-900 fade-in">
+                    <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
+                        <div className="text-center mb-8">
+                             {brandSettings && brandSettings.logo ? (
+                                <img src={brandSettings.logo} alt="Logo" className="h-20 w-auto mx-auto"/>
+                             ) : (
+                                <i className="fas fa-shopping-basket text-5xl text-green-500"></i>
+                             )}
+                            <h1 className="text-3xl font-bold text-gray-800 mt-2">{brandSettings ? brandSettings.storeName : 'OMNI-MART'}</h1>
+                            <p className="text-gray-500">Please sign in to continue</p>
+                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">Username</label>
+                                <input id="username" type="text" placeholder="e.g., owner" value={username} onChange={(e) => setUsername(e.target.value)} required className="form-input" />
+                            </div>
+                            <div className="mb-6">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
+                                <input id="password" type="password" placeholder="e.g., 123" value={password} onChange={(e) => setPassword(e.target.value)} required className="form-input" />
+                            </div>
+                             {error && <p className="bg-red-100 text-red-700 text-sm p-3 rounded-lg mb-4">{error}</p>}
+                            <div className="flex items-center justify-between">
+                                <button type="submit" disabled={isLoading} className={`w-full btn btn-primary py-3 px-4 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                    {isLoading ? 'Signing In...' : 'Sign In'}
+                                </button>
+                            </div>
+                             <div className="text-center mt-4 text-sm text-gray-600">
+                                <p>Use `owner`/`123`, `staff`/`123`, or `customer`/`123`.</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+        
+        const DashboardPage = ({ user }) => {
+             const [stats, setStats] = useState(null);
+             const [error, setError] = useState('');
+             const [lowStockItems, setLowStockItems] = useState([]);
+             const [suppliers, setSuppliers] = useState({});
+             const [purchaseOrderModal, setPurchaseOrderModal] = useState(false);
+            
+            useEffect(() => {
+                const fetchData = async () => {
+                    try {
+                        const [statsRes, lowStockRes, suppliersRes] = await Promise.all([
+                            fetch('http://localhost:3003/stats'),
+                            fetch('http://localhost:3002/products/low-stock'),
+                            fetch('http://localhost:3004/suppliers')
+                        ]);
+                        setStats(await statsRes.json());
+                        setLowStockItems(Object.entries(await lowStockRes.json()));
+                        setSuppliers(await suppliersRes.json());
+                    } catch (err) {
+                        setError('Failed to fetch dashboard data. Are all services running?');
+                    }
+                };
+                 if (user.allowedPages.includes('dashboard')) {
+                    fetchData();
+                }
+            }, [user]);
+
+            const purchaseOrderItems = useMemo(() => {
+                return lowStockItems.map(([sku, item]) => {
+                    const supplier = item.supplierId ? suppliers[item.supplierId] : null;
+                    return { ...item, sku, supplier };
+                });
+            }, [lowStockItems, suppliers]);
+
+            if (!user.allowedPages.includes('dashboard')) {
+                return <div className="text-red-500 bg-red-100 p-4 rounded-lg">You do not have permission to view the dashboard.</div>
+            }
+            if (error) return <div className="card p-4 text-red-500">{error}</div>
+            if (!stats) return <Spinner />
+
+            return (
+                 <div className="container mx-auto">
+                    {purchaseOrderModal && <PurchaseOrderModal items={purchaseOrderItems} onClose={() => setPurchaseOrderModal(false)}/>}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div className="card p-6">
+                            <h3 className="text-sm font-medium">Total Revenue</h3>
+                            <p className="text-3xl font-semibold">₹{(stats.totalRevenue || 0).toFixed(2)}</p>
+                        </div>
+                         <div className="card p-6">
+                            <h3 className="text-sm font-medium">Total Sales</h3>
+                            <p className="text-3xl font-semibold">{stats.totalSales || 0}</p>
+                        </div>
+                    </div>
+                    {lowStockItems.length > 0 && (
+                        <div className="card p-6 mb-6 bg-red-100 border-red-500 hover:transform-none">
+                            <h3 className="text-lg font-semibold text-red-800 mb-4 flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <i className="fas fa-exclamation-triangle mr-3"></i>Low Stock Alerts
+                                </div>
+                                <button onClick={() => setPurchaseOrderModal(true)} className="btn btn-primary bg-red-500 hover:bg-red-700 text-sm py-1 px-3">
+                                    Generate Purchase Order
+                                </button>
+                            </h3>
+                            <ul className="text-red-700">
+                                {lowStockItems.map(([sku, item]) => (
+                                    <li key={sku} className="border-b border-red-200 py-1">
+                                        <strong>{item.name} (SKU: {sku})</strong> is low on stock: {item.stock} remaining.
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div className="card p-6">
+                            <h3 className="text-lg font-semibold mb-4">Sales By Cashier</h3>
+                             <ResponsiveContainer width="100%" height={300}>
+                                 <BarChart data={stats.salesByCashier}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip /><Legend /><Bar dataKey="sales" fill="#8884d8" /></BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                         <div className="card p-6">
+                            <h3 className="text-lg font-semibold mb-4">Peak Sales Hours</h3>
+                             <ResponsiveContainer width="100%" height={300}>
+                                <LineChart data={stats.salesByHour}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip /><Legend /><Line type="monotone" dataKey="sales" stroke="#82ca9d" /></LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+                     <div className="card p-6 mt-6">
+                        <h3 className="text-lg font-semibold mb-4">Top Profitable Items</h3>
+                        <div className="overflow-y-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b">
+                                        <th className="text-left p-2">Item</th>
+                                        <th className="text-right p-2">Total Profit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {stats.profitByItem && stats.profitByItem.map(item => (
+                                        <tr key={item.name} className="border-b">
+                                            <td className="p-2">{item.name}</td>
+                                            <td className="p-2 text-right">₹{(item.profit || 0).toFixed(2)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
+        const PurchaseOrderModal = ({ items, onClose }) => {
+             return (
+                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+                    <div className="printable-area bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl text-gray-800">
+                        <h2 className="text-2xl font-bold mb-4">Purchase Order Request</h2>
+                        <div className="max-h-96 overflow-y-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="border-b">
+                                    <th className="text-left p-2">Item</th>
+                                    <th className="text-left p-2">SKU</th>
+                                    <th className="text-center p-2">Current Stock</th>
+                                    <th className="text-left p-2">Supplier</th>
+                                    <th className="text-left p-2">Supplier Contact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items.map(item => (
+                                    <tr key={item.sku} className="border-b">
+                                        <td className="p-2">{item.name}</td>
+                                        <td className="p-2">{item.sku}</td>
+                                        <td className="p-2 text-center">{item.stock}</td>
+                                        <td className="p-2">{item.supplier ? item.supplier.name : 'N/A'}</td>
+                                        <td className="p-2">{item.supplier ? item.supplier.phone : 'N/A'}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        </div>
+                        <div className="flex justify-end mt-6 space-x-4 no-print">
+                            <button onClick={() => window.print()} className="btn btn-secondary py-2 px-4">Print</button>
+                            <button onClick={onClose} className="btn btn-primary py-2 px-4">Close</button>
+                        </div>
+                    </div>
+                </div>
+             );
+        };
+
+        const POSPage = ({ user, billSettings }) => {
+            const [products, setProducts] = useState({});
+            const [cart, setCart] = useState([]);
+            const [skuInput, setSkuInput] = useState('');
+            const [error, setError] = useState('');
+            const [finalizeModal, setFinalizeModal] = useState({ isOpen: false });
+            const [billModal, setBillModal] = useState({ isOpen: false });
+            const [discount, setDiscount] = useState(0);
+            const [customItemModal, setCustomItemModal] = useState(false);
+
+            useEffect(() => {
+                fetchProducts();
+            }, []);
+
+            const fetchProducts = async () => {
+                try {
+                    const response = await fetch('http://localhost:3002/products');
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    setProducts(await response.json());
+                } catch (err) {
+                    setError('Failed to fetch products. Is the Inventory Service running?');
+                }
+            };
+
+            const updateQuantity = (sku, change) => {
+                const newCart = cart.map(item => {
+                    if (item.sku === sku) {
+                        return { ...item, qty: Math.max(0, item.qty + change) };
+                    }
+                    return item;
+                }).filter(item => item.qty > 0);
+                setCart(newCart);
+            };
+
+            const removeItem = (sku) => {
+                setCart(cart.filter(item => item.sku !== sku));
+            };
+
+            const handleSkuSubmit = (e) => {
+                e.preventDefault();
+                if (products[skuInput]) {
+                    const product = products[skuInput];
+                    const existingItem = cart.find(item => item.sku === skuInput);
+                    if (existingItem) {
+                        updateQuantity(skuInput, 1);
+                    } else {
+                        setCart([...cart, { ...product, sku: skuInput, qty: 1 }]);
+                    }
+                    setError('');
+                } else {
+                    setError('Product not found.');
+                }
+                setSkuInput('');
+            };
+            
+            const handleAddCustomItem = (item) => {
+                const customSku = `CUSTOM-${Date.now()}`;
+                setCart([...cart, { ...item, sku: customSku, qty: 1}]);
+                setCustomItemModal(false);
+            };
+            
+            const { subtotal, discountAmount, subtotalAfterDiscount, tax, total } = useMemo(() => {
+                const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+                const discountAmount = subtotal * (discount / 100);
+                const subtotalAfterDiscount = subtotal - discountAmount;
+                const tax = subtotalAfterDiscount * 0.05; 
+                const total = subtotalAfterDiscount + tax;
+                return { subtotal, discountAmount, subtotalAfterDiscount, tax, total };
+            }, [cart, discount]);
+
+            const handleDiscountChange = (e) => {
+                let value = parseFloat(e.target.value) || 0;
+                if (value < 0) value = 0;
+                if (value > 100) value = 100;
+                
+                if (user.role === 'staff' || user.role === 'seller') {
+                    if (value > user.maxDiscount) {
+                        value = user.maxDiscount;
+                    }
+                }
+                setDiscount(value);
+            };
+
+            const finalizeSale = async (customerDetails) => {
+                if (cart.length === 0) return;
+                try {
+                    const response = await fetch('http://localhost:3003/orders', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ items: cart, subtotal, tax, total, user, discount, customerDetails })
+                    });
+                     const newOrder = await response.json();
+                     if (!response.ok) throw new Error('Failed to finalize sale.');
+                     setFinalizeModal({isOpen: false});
+                     setBillModal({ isOpen: true, order: newOrder });
+                } catch(err) {
+                    setFinalizeModal({ ...finalizeModal, error: 'Error finalizing sale. Is the Order Service running?' });
+                }
+            };
+            
+            const resetPos = () => {
+                setCart([]);
+                setDiscount(0);
+                setBillModal({ isOpen: false });
+            };
+
+            if (user.role === 'customer') {
+                return (
+                    <div className="printable-area card p-6">
+                         <h2 className="text-2xl font-bold mb-4">My Shopping List</h2>
+                         <form onSubmit={handleSkuSubmit} className="no-print">
+                            <input type="text" value={skuInput} onChange={e => setSkuInput(e.target.value)} placeholder="Enter SKU to add item" className="form-input"/>
+                        </form>
+                        <table className="w-full">
+                            <thead>
+                                <tr className="border-b">
+                                    <th className="text-left p-2">Product</th>
+                                    <th className="text-center p-2">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cart.map(item => (
+                                    <tr key={item.sku} className="border-b">
+                                        <td className="p-2">{item.name}</td>
+                                        <td className="p-2 text-center">{item.qty}</td>
+                                    </tr>
+                                ))}
+                                {cart.length === 0 && (<tr><td colSpan="2" className="text-center text-gray-500 p-8">Your list is empty.</td></tr>)}
+                            </tbody>
+                        </table>
+                        <div className="text-center mt-6 no-print">
+                            <button onClick={() => window.print()} disabled={cart.length === 0} className="btn btn-primary p-4 text-xl disabled:opacity-50">
+                                <i className="fas fa-print mr-2"></i>Print List
+                            </button>
+                        </div>
+                        <p className="text-center text-sm text-gray-500 mt-4 print-only">Please take this list to a staff member for billing.</p>
+                    </div>
+                );
+            }
+
+            return (
+                 <div className="flex h-full gap-6">
+                    {finalizeModal.isOpen && <FinalizeSaleModal onFinalize={finalizeSale} onClose={() => setFinalizeModal({isOpen: false})} error={finalizeModal.error} />}
+                    {billModal.isOpen && <BillModal order={billModal.order} onClose={resetPos} billSettings={billSettings} />}
+                    {customItemModal && <CustomItemModal onSave={handleAddCustomItem} onClose={() => setCustomItemModal(false)} />}
+                    <div className="w-2/3 card p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-2xl font-bold">Point of Sale</h2>
+                            <button onClick={() => setCustomItemModal(true)} className="btn btn-secondary py-2 px-4"><i className="fas fa-plus mr-2"></i>Add Custom Item</button>
+                        </div>
+                         <form onSubmit={handleSkuSubmit}>
+                            <input type="text" value={skuInput} onChange={e => setSkuInput(e.target.value)} placeholder="Enter SKU and press Enter" className="form-input"/>
+                             {error && <p className="text-red-500 my-2">{error}</p>}
+                        </form>
+                        <div className="overflow-y-auto h-[calc(100%-150px)]">
+                            <table className="w-full">
+                                <thead><tr className="border-b"><th className="text-left p-2">Product</th><th className="text-center p-2">Quantity</th><th className="text-right p-2">Price</th><th className="text-right p-2">Total</th><th className="p-2"></th></tr></thead>
+                                <tbody>
+                                    {cart.length > 0 ? cart.map(item => (
+                                        <tr key={item.sku} className="border-b fade-in">
+                                            <td className="p-2">{item.name}</td>
+                                            <td className="p-2 text-center">
+                                                <div className="flex items-center justify-center">
+                                                    <button onClick={() => updateQuantity(item.sku, -1)} className="btn btn-secondary px-2 py-0.5">-</button>
+                                                    <span className="px-3">{item.qty}</span>
+                                                    <button onClick={() => updateQuantity(item.sku, 1)} className="btn btn-secondary px-2 py-0.5">+</button>
+                                                </div>
+                                            </td>
+                                            <td className="p-2 text-right">₹{item.price.toFixed(2)}</td>
+                                            <td className="p-2 text-right">₹{(item.price * item.qty).toFixed(2)}</td>
+                                            <td className="p-2 text-right">
+                                                <button onClick={() => removeItem(item.sku)} className="text-red-500 hover:text-red-700">
+                                                    <i className="fas fa-times-circle"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )) : (
+                                        <tr>
+                                            <td colSpan="5" className="text-center p-8">
+                                                <div className="flex flex-col items-center opacity-50">
+                                                    <svg className="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                                    <p>Cart is empty</p>
+                                                    <p className="text-sm text-gray-400">Scan an item or enter a SKU to begin.</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="w-1/3 card p-6 flex flex-col justify-between">
+                         <div>
+                            <h3 className="text-xl font-bold mb-4">Total</h3>
+                            <div className="flex justify-between mb-2"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+                            <div className="flex justify-between items-center mb-2">
+                                <label htmlFor="discount" className="text-green-600 font-semibold">Discount (%)</label>
+                                <input type="number" id="discount" value={discount} onChange={handleDiscountChange} className="form-input w-24 text-right p-1" max={(user.role === 'owner' || user.role === 'admin') ? 100 : user.maxDiscount} min="0"/>
+                            </div>
+                            {discount > 0 && 
+                                <div className="flex justify-between mb-2 text-green-600">
+                                    <span>Discount Amount</span>
+                                    <span>-₹{discountAmount.toFixed(2)}</span>
+                                </div>
+                            }
+                            <div className="flex justify-between mb-2 border-t pt-2"><span>Taxable Amount</span><span>₹{subtotalAfterDiscount.toFixed(2)}</span></div>
+                            <div className="flex justify-between mb-2"><span>Tax (5%)</span><span>₹{tax.toFixed(2)}</span></div>
+                            <div className="flex justify-between font-bold text-2xl border-t pt-2 mt-2"><span>Total</span><span>₹{total.toFixed(2)}</span></div>
+                        </div>
+                        <button onClick={() => setFinalizeModal({isOpen: true})} disabled={cart.length === 0} className="w-full btn btn-primary p-4 text-xl disabled:opacity-50">FINALIZE SALE</button>
+                    </div>
+                </div>
+            );
+        };
+        
+        const CustomItemModal = ({ onSave, onClose }) => {
+            const [name, setName] = useState('');
+            const [price, setPrice] = useState('');
+
+            const handleSave = () => {
+                if (name && price > 0) {
+                    onSave({ name, price: parseFloat(price) });
+                }
+            };
+            return (
+                 <div className="fixed inset-0 flex items-center justify-center z-50 glass-modal-container">
+                    <div className="w-full max-w-md mx-auto glass-modal-content">
+                        <h2 className="text-2xl font-bold mb-4">Add Custom Item</h2>
+                        <div className="mb-4">
+                            <label className="block">Item Name</label>
+                            <input type="text" value={name} onChange={e => setName(e.target.value)} className="form-input"/>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block">Price (₹)</label>
+                            <input type="number" value={price} onChange={e => setPrice(e.target.value)} className="form-input"/>
+                        </div>
+                        <div className="flex justify-end mt-6">
+                            <button onClick={onClose} className="btn btn-secondary py-2 px-4 mr-2">Cancel</button>
+                            <button onClick={handleSave} className="btn btn-primary py-2 px-4">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FinalizeSaleModal = ({ onFinalize, onClose, error }) => {
+            const [customerName, setCustomerName] = useState('');
+            const [customerPhone, setCustomerPhone] = useState('');
+            const [customers, setCustomers] = useState({});
+            const [searchTerm, setSearchTerm] = useState('');
+            const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+            useEffect(() => {
+                const fetchCustomers = async () => {
+                    const res = await fetch('http://localhost:3001/users');
+                    const allUsers = await res.json();
+                    const customerUsers = Object.entries(allUsers).filter(([id, user]) => user.role === 'customer');
+                    setCustomers(Object.fromEntries(customerUsers));
+                };
+                fetchCustomers();
+            }, []);
+
+            const filteredCustomers = useMemo(() => {
+                if (!searchTerm) return [];
+                return Object.entries(customers).filter(([id, customer]) => 
+                    customer.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    (customer.phone && customer.phone.includes(searchTerm))
+                );
+            }, [searchTerm, customers]);
+
+            const handleSelectCustomer = (id, customer) => {
+                setSelectedCustomer({id, ...customer});
+                setSearchTerm(customer.name);
+            };
+
+            const handleSubmit = () => {
+                onFinalize(selectedCustomer ? { id: selectedCustomer.id, name: selectedCustomer.name, phone: selectedCustomer.phone} : { name: customerName, phone: customerPhone });
+            };
+
+            return (
+                 <div className="fixed inset-0 flex items-center justify-center z-50 glass-modal-container">
+                    <div className="w-full max-w-md mx-auto glass-modal-content">
+                        <h2 className="text-2xl font-bold mb-4">Finalize Sale</h2>
+                        <div className="mb-4 relative">
+                            <label className="block">Search Existing Customer (by Name or Phone)</label>
+                            <input type="text" value={searchTerm} onChange={e => { setSearchTerm(e.target.value); setSelectedCustomer(null); }} className="form-input" placeholder="Start typing..."/>
+                            {filteredCustomers.length > 0 && !selectedCustomer && (
+                                <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-40 overflow-y-auto">
+                                    {filteredCustomers.map(([id, customer]) => (
+                                        <li key={id} onClick={() => handleSelectCustomer(id, customer)} className="p-2 hover:bg-gray-100 cursor-pointer">
+                                            {customer.name} - {customer.phone} ({customer.loyaltyPoints || 0} pts)
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                        <div className="text-center my-2">OR</div>
+                        <div className="mb-4">
+                            <label className="block">Add New Customer Name</label>
+                            <input type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} className="form-input" placeholder="e.g., John Doe"/>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block">Add New Customer Phone</label>
+                            <input type="text" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} className="form-input" placeholder="Optional"/>
+                        </div>
+                        {error && <p className="text-red-500 mb-4">{error}</p>}
+                        <div className="flex justify-end mt-6">
+                            <button onClick={onClose} className="btn btn-secondary py-2 px-4 mr-2">Cancel</button>
+                            <button onClick={handleSubmit} className="btn btn-primary py-2 px-4">Confirm & Generate Bill</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
+        const BillContent = ({order, billSettings}) => {
+             return (
+                 <div id="bill-to-print" className="bg-white p-8 w-[400px] text-gray-800">
+                      <div className="text-center mb-6">
+                            <h2 className="text-2xl font-bold">{billSettings && billSettings.storeName ? billSettings.storeName : 'OMNI-MART'}</h2>
+                            <p className="text-sm">{billSettings && billSettings.storeAddress ? billSettings.storeAddress : '123 Market St, Anytown'}</p>
+                            <h3 className="text-xl font-semibold mt-4">Tax Invoice/Bill</h3>
+                        </div>
+                        <div className="flex justify-between text-sm border-b pb-2 mb-2">
+                            <span>Order ID: {order.orderId}</span>
+                            <span>Date: {new Date(order.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between text-sm mb-4">
+                            <span>Cashier: {order.user.name}</span>
+                             {order.customerDetails && order.customerDetails.name && <span>Customer: {order.customerDetails.name}</span>}
+                        </div>
+                        <table className="w-full text-sm mb-4">
+                            <thead>
+                                <tr className="border-b">
+                                    <th className="text-left font-semibold py-1">Item</th>
+                                    <th className="text-center font-semibold py-1">Qty</th>
+                                    <th className="text-right font-semibold py-1">Price</th>
+                                    <th className="text-right font-semibold py-1">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {order.items.map(item => (
+                                    <tr key={item.sku}>
+                                        <td className="py-1">{item.name}</td>
+                                        <td className="text-center py-1">{item.qty}</td>
+                                        <td className="text-right py-1">₹{item.price.toFixed(2)}</td>
+                                        <td className="text-right py-1">₹{(item.price * item.qty).toFixed(2)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <div className="border-t pt-2 text-sm">
+                             <div className="flex justify-between"><span>Subtotal:</span><span>₹{order.subtotal.toFixed(2)}</span></div>
+                            {order.discount > 0 && <div className="flex justify-between text-green-600"><span>Discount ({order.discount}%):</span><span>-₹{(order.subtotal * (order.discount / 100)).toFixed(2)}</span></div>}
+                             <div className="flex justify-between"><span>Tax (5%):</span><span>₹{order.tax.toFixed(2)}</span></div>
+                             <div className="flex justify-between font-bold text-lg mt-2 border-t pt-2"><span>Total:</span><span>₹{order.total.toFixed(2)}</span></div>
+                        </div>
+                        <div className="text-center mt-6 text-xs text-gray-500">
+                            <p>{billSettings && billSettings.footerMessage ? billSettings.footerMessage : 'Thank you for choosing OMNI-MART!'}</p>
+                        </div>
+                 </div>
+            );
+        };
+        
+        const BillModal = ({ order, onClose, billSettings }) => {
+             return (
+                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+                    <div className="printable-area bg-white p-8 rounded-lg shadow-xl w-full max-w-md text-gray-800">
+                        <BillContent order={order} billSettings={billSettings} />
+                        <div className="flex justify-center mt-6 space-x-4 no-print">
+                            <button onClick={() => window.print()} className="btn btn-secondary py-2 px-4">Print</button>
+                            <button onClick={onClose} className="btn btn-primary py-2 px-4">New Sale</button>
+                        </div>
+                    </div>
+                </div>
+             );
+        };
+
+        const InventoryPage = ({ user }) => { 
+            const [products, setProducts] = useState({});
+            const [isLoading, setIsLoading] = useState(true);
+            const [error, setError] = useState('');
+            const [showModal, setShowModal] = useState(false);
+            const [currentProduct, setCurrentProduct] = useState(null);
+            const [isEditing, setIsEditing] = useState(false);
+            const [alertModal, setAlertModal] = useState({ isOpen: false });
+            const [suppliers, setSuppliers] = useState({});
+            const { data: filteredProducts, setSearchTerm, requestSort, sortConfig, setFilter } = useTableData(products);
+
+            const fetchAllData = useCallback(async () => {
+                setIsLoading(true);
+                try {
+                    const [productsRes, suppliersRes] = await Promise.all([
+                        fetch('http://localhost:3002/products'),
+                        fetch('http://localhost:3004/suppliers')
+                    ]);
+                    if (!productsRes.ok || !suppliersRes.ok) throw new Error('Failed to fetch initial data');
+                    setProducts(await productsRes.json());
+                    setSuppliers(await suppliersRes.json());
+                } catch (err) {
+                    setError('Failed to fetch data. Are all services running?');
+                } finally {
+                    setIsLoading(false);
+                }
+            }, []);
+            
+            useEffect(() => { fetchAllData(); }, [fetchAllData]);
+            
+            const handleAddProduct = () => {
+                setIsEditing(false);
+                setCurrentProduct({ name: '', price: '', cost: '', stock: '', lowStockThreshold: 20, supplierId: '' });
+                setShowModal(true);
+            };
+
+            const handleEditProduct = (sku) => {
+                setIsEditing(true);
+                setCurrentProduct({ ...products[sku], sku });
+                setShowModal(true);
+            };
+
+            const handleDeleteProduct = (sku) => {
+                setAlertModal({
+                    isOpen: true,
+                    title: 'Confirm Deletion',
+                    message: `Are you sure you want to delete product SKU ${sku}?`,
+                    onConfirm: () => {
+                        proceedWithDelete(sku);
+                        setAlertModal({ isOpen: false });
+                    },
+                    onCancel: () => setAlertModal({ isOpen: false })
+                });
+            };
+            
+            const proceedWithDelete = async (sku) => {
+                try {
+                    const response = await fetch(`http://localhost:3002/products/${sku}`, { method: 'DELETE' });
+                    if (!response.ok) throw new Error('Failed to delete product.');
+                    setAlertModal({ isOpen: true, title: 'Success', message: 'Product deleted!', showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchAllData(); } });
+                } catch (err) {
+                    setAlertModal({ isOpen: true, title: 'Error', message: 'Error deleting product.', showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+            
+            const handleSaveProduct = async (productData) => {
+                const url = isEditing ? `http://localhost:3002/products/${productData.sku}` : 'http://localhost:3002/products';
+                const method = isEditing ? 'PUT' : 'POST';
+                try {
+                     const response = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(productData) });
+                     if (!response.ok) {
+                         const errData = await response.json();
+                         throw new Error(errData.message || 'Failed to save product');
+                     }
+                     setShowModal(false);
+                     setAlertModal({ isOpen: true, title: 'Success', message: `Product ${isEditing ? 'updated' : 'added'}!`, showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchAllData(); } });
+                } catch(err) {
+                     setAlertModal({ isOpen: true, title: 'Error', message: `Error: ${err.message}`, showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+            
+            const getSortIndicator = (key) => sortConfig.key === key ? ' ▲' : ' ▼';
+
+            if (isLoading) return <Spinner />;
+            if (error) return <p className="card p-4 text-red-500">{error}</p>;
+
+            return (
+                <div className="container mx-auto">
+                    {alertModal.isOpen && <ActionModal {...alertModal} />}
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-semibold">Inventory Management</h2>
+                        <button onClick={handleAddProduct} className="btn btn-primary py-2 px-4"><i className="fas fa-plus mr-2"></i>Add New Product</button>
+                    </div>
+
+                     <div className="card p-4 mb-6 hover:transform-none flex gap-4">
+                        <input 
+                            type="text" 
+                            placeholder="Search inventory..." 
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="form-input flex-grow"
+                        />
+                         <select onChange={(e) => setFilter('stock', e.target.value)} className="form-input w-48">
+                            <option value="all">All Stock</option>
+                            <option value="in_stock">In Stock</option>
+                            <option value="out_of_stock">Out of Stock</option>
+                        </select>
+                    </div>
+
+                    <div className="card overflow-hidden">
+                       <table className="min-w-full leading-normal">
+                             <thead>
+                                <tr>
+                                    <th onClick={() => requestSort('id')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">SKU{getSortIndicator('id')}</th>
+                                    <th onClick={() => requestSort('name')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Name{getSortIndicator('name')}</th>
+                                    <th onClick={() => requestSort('price')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Price (₹){getSortIndicator('price')}</th>
+                                    <th onClick={() => requestSort('stock')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Stock{getSortIndicator('stock')}</th>
+                                    <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredProducts.map(([sku, product]) => {
+                                    if (!product) return null;
+                                    return (
+                                        <tr key={sku} className="fade-in">
+                                            <td className="px-5 py-5 border-b text-sm">{sku}</td>
+                                            <td className="px-5 py-5 border-b text-sm">{product.name}</td>
+                                            <td className="px-5 py-5 border-b text-sm">₹{typeof product.price === 'number' ? product.price.toFixed(2) : '0.00'}</td>
+                                            <td className="px-5 py-5 border-b text-sm">{product.stock}</td>
+                                            <td className="px-5 py-5 border-b text-sm">
+                                                <button onClick={() => handleEditProduct(sku)} className="text-blue-500 hover:text-blue-700 mr-4">Edit</button>
+                                                <button onClick={() => handleDeleteProduct(sku)} className="text-red-500 hover:text-red-700">Delete</button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                    {showModal && <ProductModal product={currentProduct} isEditing={isEditing} onSave={handleSaveProduct} onClose={() => setShowModal(false)} suppliers={suppliers}/>}
+                </div>
+            );
+         };
+
+        const ProductModal = ({ product, isEditing, onSave, onClose, suppliers }) => {
+            const [formData, setFormData] = useState(product);
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                onSave(formData);
+            };
+            return (
+                <div className="fixed inset-0 flex items-center justify-center z-40 glass-modal-container">
+                    <div className="w-full max-w-md mx-auto glass-modal-content">
+                        <h2 className="text-2xl font-bold mb-4">{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
+                        <form onSubmit={handleSubmit}>
+                            {isEditing && <div className="mb-4"><label className="block">SKU</label><input type="text" name="sku" value={formData.sku} disabled required className="form-input" /></div>}
+                            <div className="mb-4"><label className="block">Product Name</label><input type="text" name="name" value={formData.name} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Price</label><input type="number" name="price" step="0.01" value={formData.price} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Cost</label><input type="number" name="cost" step="0.01" value={formData.cost} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Stock</label><input type="number" name="stock" value={formData.stock} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Low Stock Threshold</label><input type="number" name="lowStockThreshold" value={formData.lowStockThreshold || 20} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4">
+                                <label className="block">Supplier</label>
+                                <select name="supplierId" value={formData.supplierId || ''} onChange={handleChange} className="form-input">
+                                    <option value="">None</option>
+                                    {Object.entries(suppliers).map(([id, supplier]) => (
+                                        <option key={id} value={id}>{supplier.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="flex justify-end mt-6"><button type="button" onClick={onClose} className="btn btn-secondary py-2 px-4 mr-2">Cancel</button><button type="submit" className="btn btn-primary py-2 px-4">Save</button></div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+        
+        const OrdersPage = ({ user, billSettings }) => {
+            const [orders, setOrders] = useState([]);
+            const [isLoading, setIsLoading] = useState(true);
+            const [error, setError] = useState('');
+            const [alertModal, setAlertModal] = useState({ isOpen: false });
+            const [editingOrder, setEditingOrder] = useState(null); 
+            const { data: filteredOrders, setSearchTerm, requestSort, sortConfig, setFilter } = useTableData(orders.reduce((acc, order) => { acc[order.orderId] = order; return acc; }, {}));
+            const [selectedOrders, setSelectedOrders] = useState(new Set());
+            const [pdfBill, setPdfBill] = useState(null);
+
+            const fetchOrders = useCallback(async () => {
+                setIsLoading(true);
+                 try {
+                    const response = await fetch('http://localhost:3003/orders');
+                    if (!response.ok) throw new Error('Failed to fetch orders');
+                    setOrders(await response.json());
+                } catch (err) {
+                    setError('Failed to fetch orders. Is the Order Service running?');
+                } finally {
+                    setIsLoading(false);
+                }
+            }, []);
+            
+            useEffect(() => { fetchOrders(); }, [fetchOrders]);
+            
+            const handleDeleteOrder = (orderId) => {
+                setAlertModal({
+                    isOpen: true,
+                    title: 'Confirm Deletion',
+                    message: `Are you sure you want to permanently delete order ${orderId}? This cannot be undone.`,
+                    onConfirm: () => {
+                        proceedWithDelete(orderId);
+                        setAlertModal({ isOpen: false });
+                    },
+                    onCancel: () => setAlertModal({ isOpen: false })
+                });
+            };
+
+            const proceedWithDelete = async (orderId) => {
+                const idToDelete = orderId.substring(1); // Remove '#'
+                try {
+                    const response = await fetch(`http://localhost:3003/orders/${idToDelete}`, { method: 'DELETE' });
+                    if (!response.ok) throw new Error('Failed to delete order.');
+                    setAlertModal({ isOpen: true, title: 'Success', message: 'Order permanently deleted.', showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchOrders(); } });
+                } catch (err) {
+                    setAlertModal({ isOpen: true, title: 'Error', message: 'Error deleting order.', showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+
+            const handleCancelOrder = (orderId) => {
+                setAlertModal({ isOpen: true, title: 'Confirm Cancellation', message: `Are you sure you want to cancel order ${orderId}?`, onConfirm: () => { proceedWithCancel(orderId); setAlertModal({isOpen: false}); }, onCancel: () => setAlertModal({isOpen: false})});
+            };
+
+            const proceedWithCancel = async (orderId) => {
+                 try {
+                    const response = await fetch(`http://localhost:3003/orders/${orderId}/cancel`, { method: 'POST' });
+                    if (!response.ok) throw new Error('Failed to cancel order.');
+                    setAlertModal({ isOpen: true, title: 'Success', message: 'Order cancelled.', showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchOrders(); } });
+                } catch (err) {
+                    setAlertModal({ isOpen: true, title: 'Error', message: 'Error cancelling order.', showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+
+            const handleSaveChanges = async (updatedOrderData) => {
+                try {
+                    const response = await fetch(`http://localhost:3003/orders/${updatedOrderData.orderId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedOrderData),
+                    });
+                    if (!response.ok) throw new Error('Failed to update order.');
+                    setEditingOrder(null);
+                    setAlertModal({ isOpen: true, title: 'Success', message: 'Order updated successfully!', showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchOrders(); } });
+                } catch (err) {
+                    setAlertModal({ isOpen: true, title: 'Error', message: 'Failed to update order.', showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+
+            const handleSelectOrder = (orderId, isSelected) => {
+                const newSelection = new Set(selectedOrders);
+                if (isSelected) {
+                    newSelection.add(orderId);
+                } else {
+                    newSelection.delete(orderId);
+                }
+                setSelectedOrders(newSelection);
+            };
+            
+            const downloadBill = async (orderId) => {
+                const orderToDownload = orders.find(o => o.orderId === orderId);
+                if (orderToDownload) {
+                    setPdfBill(orderToDownload);
+                    setTimeout(() => {
+                        const billElement = document.getElementById('bill-to-print');
+                        if(billElement) {
+                            html2canvas(billElement).then(canvas => {
+                                const imgData = canvas.toDataURL('image/png');
+                                const pdf = new jsPDF();
+                                const imgProps= pdf.getImageProperties(imgData);
+                                const pdfWidth = pdf.internal.pageSize.getWidth();
+                                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                                pdf.save(`Bill-${orderId}.pdf`);
+                                setPdfBill(null);
+                            });
+                        }
+                    }, 500);
+                }
+            };
+            
+            const downloadSelectedBills = () => {
+                selectedOrders.forEach((orderId, index) => {
+                    setTimeout(() => {
+                        downloadBill(orderId);
+                    }, index * 1000);
+                });
+            };
+            
+            const getSortIndicator = (key) => sortConfig.key === key ? (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼') : '';
+            
+            if (isLoading) return <Spinner />;
+            if (error) return <p className="card p-4 text-red-500">{error}</p>;
+
+            return (
+                 <div className="container mx-auto">
+                    {alertModal.isOpen && <ActionModal {...alertModal} />}
+                    {editingOrder && <OrderEditModal order={editingOrder} onSave={handleSaveChanges} onClose={() => setEditingOrder(null)} />}
+                    <h2 className="text-2xl font-semibold mb-6">Order History</h2>
+                    
+                    <div className="card p-4 mb-6 hover:transform-none flex gap-4">
+                        <input type="text" placeholder="Search orders..." onChange={(e) => setSearchTerm(e.target.value)} className="form-input flex-grow" />
+                        <select onChange={(e) => setFilter('status', e.target.value)} className="form-input w-48">
+                            <option value="all">All Statuses</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                            <option value="EDITED">Edited</option>
+                        </select>
+                        <button onClick={downloadSelectedBills} disabled={selectedOrders.size === 0} className="btn btn-primary py-2 px-4 disabled:opacity-50">
+                            <i className="fas fa-download mr-2"></i>Download Selected ({selectedOrders.size})
+                        </button>
+                    </div>
+
+                    <div className="card overflow-x-auto">
+                        <table className="min-w-full leading-normal">
+                             <thead><tr>
+                                <th className="p-3"><input type="checkbox" onChange={e => setSelectedOrders(e.target.checked ? new Set(filteredOrders.map(([id]) => id)) : new Set())}/></th>
+                                <th onClick={() => requestSort('id')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Order ID{getSortIndicator('id')}</th>
+                                <th onClick={() => requestSort('timestamp')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Date{getSortIndicator('timestamp')}</th>
+                                <th onClick={() => requestSort('user')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Cashier{getSortIndicator('user')}</th>
+                                <th onClick={() => requestSort('total')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Total{getSortIndicator('total')}</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+                            </tr></thead>
+                             <tbody>
+                                 {filteredOrders.map(([orderId, order]) => {
+                                     if (!order || !order.user) return null;
+                                     return (
+                                     <tr key={orderId}>
+                                         <td className="p-3 border-b"><input type="checkbox" checked={selectedOrders.has(orderId)} onChange={e => handleSelectOrder(orderId, e.target.checked)} /></td>
+                                         <td className="px-5 py-5 border-b text-sm">{orderId}</td>
+                                         <td className="px-5 py-5 border-b text-sm">{new Date(order.timestamp).toLocaleString()}</td>
+                                         <td className="px-5 py-5 border-b text-sm">{order.user.name}</td>
+                                         <td className="px-5 py-5 border-b text-sm">₹{order.total.toFixed(2)}</td>
+                                         <td className="px-5 py-5 border-b text-sm">
+                                             <span className={`px-2 py-1 font-semibold leading-tight rounded-full ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' : order.status === 'CANCELLED' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                                 {order.status}
+                                             </span>
+                                         </td>
+                                         <td className="px-5 py-5 border-b text-sm">
+                                             <div className="flex items-center space-x-4">
+                                                <button onClick={() => downloadBill(order.orderId)} title="Download Bill" className="text-gray-500 hover:text-gray-700"><i className="fas fa-download"></i></button>
+                                                {order.status !== 'CANCELLED' && (
+                                                    <React.Fragment>
+                                                        <button onClick={() => setEditingOrder(order)} title="Edit Order" className="text-blue-500 hover:text-blue-700"><i className="fas fa-pencil-alt"></i></button>
+                                                        <button onClick={() => handleCancelOrder(orderId)} title="Cancel Order" className="text-yellow-500 hover:text-yellow-700"><i className="fas fa-times-circle"></i></button>
+                                                    </React.Fragment>
+                                                )}
+                                                 {user.role === 'owner' && (
+                                                    <button onClick={() => handleDeleteOrder(orderId)} title="Delete Order" className="text-red-500 hover:text-red-700"><i className="fas fa-trash-alt"></i></button>
+                                                )}
+                                             </div>
+                                         </td>
+                                     </tr>
+                                 )})}
+                             </tbody>
+                        </table>
+                    </div>
+                     {pdfBill && <div id="pdf-container"><BillContent order={pdfBill} billSettings={billSettings} /></div>}
+                </div>
+            );
+        };
+        
+        const OrderEditModal = ({ order, onSave, onClose }) => {
+            const [editedItems, setEditedItems] = useState(order.items);
+            const [allProducts, setAllProducts] = useState(null);
+            const [skuInput, setSkuInput] = useState('');
+
+            useEffect(() => {
+                const fetchProducts = async () => {
+                    try {
+                        const res = await fetch('http://localhost:3002/products');
+                        setAllProducts(await res.json());
+                    } catch (e) { console.error("Failed to fetch products for editing"); }
+                }
+                fetchProducts();
+            }, []);
+
+            const handleQuantityChange = (sku, newQty) => {
+                newQty = parseInt(newQty, 10) || 0;
+                if (newQty < 0) return;
+                const newItems = editedItems.map(item => item.sku === sku ? { ...item, qty: newQty } : item).filter(item => item.qty > 0); 
+                setEditedItems(newItems);
+            };
+            
+            const handleAddItem = (e) => {
+                e.preventDefault();
+                if (allProducts && allProducts[skuInput]) {
+                    const product = allProducts[skuInput];
+                    const existingItem = editedItems.find(item => item.sku === skuInput);
+                    if (existingItem) {
+                        handleQuantityChange(skuInput, existingItem.qty + 1);
+                    } else {
+                        setEditedItems([...editedItems, { ...product, sku: skuInput, qty: 1 }]);
+                    }
+                }
+                setSkuInput('');
+            };
+
+            const { subtotal, tax, total } = useMemo(() => {
+                const subtotal = editedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+                const tax = subtotal * 0.05;
+                const total = subtotal + tax;
+                return { subtotal, tax, total };
+            }, [editedItems]);
+
+            const handleSave = () => {
+                const updatedOrder = { ...order, items: editedItems, subtotal, tax, total };
+                onSave(updatedOrder);
+            };
+            
+            return (
+                <div className="fixed inset-0 flex items-center justify-center z-50 glass-modal-container">
+                    <div className="w-full max-w-2xl mx-auto glass-modal-content">
+                        <h2 className="text-2xl font-bold mb-4">Edit Order #{order.orderId}</h2>
+                        <div className="max-h-80 overflow-y-auto">
+                            <table className="w-full">
+                                <thead><tr><th className="text-left p-2">Product</th><th className="text-center p-2">Quantity</th><th className="text-right p-2">Price</th></tr></thead>
+                                <tbody>
+                                    {editedItems.map(item => (
+                                        <tr key={item.sku}>
+                                            <td className="p-2">{item.name}</td>
+                                            <td className="p-2"><input type="number" value={item.qty} onChange={e => handleQuantityChange(item.sku, e.target.value)} className="w-20 text-center border rounded"/></td>
+                                            <td className="p-2 text-right">₹{item.price.toFixed(2)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <form onSubmit={handleAddItem} className="mt-4 flex gap-2">
+                            <input type="text" value={skuInput} onChange={e => setSkuInput(e.target.value)} placeholder="Enter SKU to add item" className="form-input flex-grow"/>
+                            <button type="submit" className="btn btn-primary bg-green-500 hover:bg-green-600">Add Item</button>
+                        </form>
+                         <div className="mt-6 border-t pt-4">
+                            <div className="flex justify-between mb-2"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+                            <div className="flex justify-between mb-2"><span>Tax (5%)</span><span>₹{tax.toFixed(2)}</span></div>
+                            <div className="flex justify-between font-bold text-xl"><span>New Total</span><span>₹{total.toFixed(2)}</span></div>
+                        </div>
+                        <div className="flex justify-end mt-6">
+                            <button onClick={onClose} className="btn btn-secondary py-2 px-4 mr-2">Cancel</button>
+                            <button onClick={handleSave} className="btn btn-primary py-2 px-4">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
+        const UsersPage = ({ user }) => {
+            const [users, setUsers] = useState({});
+            const [isLoading, setIsLoading] = useState(true);
+            const [error, setError] = useState('');
+            const [showModal, setShowModal] = useState(false);
+            const [currentUser, setCurrentUser] = useState(null);
+            const [isEditing, setIsEditing] = useState(false);
+            const [alertModal, setAlertModal] = useState({ isOpen: false });
+            const { data: filteredUsers, setSearchTerm, requestSort, sortConfig, setFilter } = useTableData(users);
+
+            const fetchUsers = useCallback(async () => {
+                setIsLoading(true);
+                try {
+                    const response = await fetch('http://localhost:3001/users');
+                    if (!response.ok) throw new Error('Failed to fetch users.');
+                    const data = await response.json();
+                    setUsers(data);
+                } catch (err) {
+                    setError('Failed to connect to server. Is the Auth Service running?');
+                } finally {
+                    setIsLoading(false);
+                }
+            }, []);
+
+            useEffect(() => { fetchUsers(); }, [fetchUsers]);
+
+            const handleAddUser = () => {
+                setIsEditing(false);
+                setCurrentUser({ username: '', password: '', name: '', role: 'staff', maxDiscount: 0, allowedPages: ['pos', 'inventory'] });
+                setShowModal(true);
+            };
+
+            const handleEditUser = (userId) => {
+                setIsEditing(true);
+                setCurrentUser({ ...users[userId], id: userId, password: '' }); 
+                setShowModal(true);
+            };
+
+            const handleDeleteUser = (userId) => {
+                 setAlertModal({
+                    isOpen: true,
+                    title: 'Confirm Deletion',
+                    message: `Are you sure you want to delete user "${users[userId].name}"?`,
+                    onConfirm: () => {
+                        proceedWithDelete(userId);
+                        setAlertModal({ isOpen: false });
+                    },
+                    onCancel: () => setAlertModal({ isOpen: false })
+                });
+            };
+
+            const proceedWithDelete = async (userId) => {
+                try {
+                    const response = await fetch(`http://localhost:3001/users/${userId}`, { method: 'DELETE' });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || 'Failed to delete user.');
+                    setAlertModal({ isOpen: true, title: 'Success', message: 'User deleted successfully!', showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchUsers(); } });
+                } catch (err) {
+                    setAlertModal({ isOpen: true, title: 'Error', message: `Error: ${err.message}`, showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+            
+            const handleSaveUser = async (userData) => {
+                const url = isEditing ? `http://localhost:3001/users/${userData.id}` : 'http://localhost:3001/users';
+                const method = isEditing ? 'PUT' : 'POST';
+                const body = { ...userData };
+                if (isEditing && !body.password) delete body.password;
+                
+                try {
+                    const response = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || 'Failed to save user.');
+                    setShowModal(false);
+                    setAlertModal({ isOpen: true, title: 'Success', message: `User ${isEditing ? 'updated' : 'created'} successfully!`, showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchUsers(); } });
+                } catch (err) {
+                     setAlertModal({ isOpen: true, title: 'Error', message: `Error: ${err.message}`, showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+
+            const getSortIndicator = (key) => sortConfig.key === key ? (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼') : '';
+
+            if (isLoading) return <Spinner />;
+            if (error) return <p className="card p-4 text-red-500">{error}</p>;
+
+            return (
+                <div className="container mx-auto">
+                    {alertModal.isOpen && <ActionModal {...alertModal} />}
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-semibold">Manage Users</h2>
+                        <button onClick={handleAddUser} className="btn btn-primary py-2 px-4"><i className="fas fa-plus mr-2"></i>Add New User</button>
+                    </div>
+                     <div className="card p-4 mb-6 hover:transform-none flex gap-4">
+                        <input type="text" placeholder="Search users..." onChange={(e) => setSearchTerm(e.target.value)} className="form-input flex-grow" />
+                         <select onChange={(e) => setFilter('role', e.target.value)} className="form-input w-48">
+                            <option value="all">All Roles</option>
+                            <option value="owner">Owner</option>
+                            <option value="admin">Admin</option>
+                            <option value="staff">Staff</option>
+                            <option value="seller">Seller</option>
+                            <option value="customer">Customer</option>
+                        </select>
+                    </div>
+                    <div className="card overflow-hidden">
+                        <table className="min-w-full leading-normal">
+                            <thead><tr>
+                                <th onClick={() => requestSort('id')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">ID{getSortIndicator('id')}</th>
+                                <th onClick={() => requestSort('name')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Name{getSortIndicator('name')}</th>
+                                <th onClick={() => requestSort('username')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Username{getSortIndicator('username')}</th>
+                                <th onClick={() => requestSort('role')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Role{getSortIndicator('role')}</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Permissions</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Max Discount</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+                            </tr></thead>
+                            <tbody>
+                                {filteredUsers.map(([userId, userDetails]) => (
+                                    <tr key={userId}>
+                                        <td className="px-5 py-5 border-b text-sm">{userId}</td>
+                                        <td className="px-5 py-5 border-b text-sm">{userDetails.name}</td>
+                                        <td className="px-5 py-5 border-b text-sm">{userDetails.username}</td>
+                                        <td className="px-5 py-5 border-b text-sm capitalize">{userDetails.role}</td>
+                                        <td className="px-5 py-5 border-b text-sm uppercase">{userDetails.allowedPages.join(', ')}</td>
+                                        <td className="px-5 py-5 border-b text-sm">{userDetails.maxDiscount}%</td>
+                                        <td className="px-5 py-5 border-b text-sm">
+                                            <button onClick={() => handleEditUser(userId)} className="text-blue-500 hover:text-blue-700 mr-4">Edit</button>
+                                            <button onClick={() => handleDeleteUser(userId)} className="text-red-500 hover:text-red-700">Delete</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {showModal && <UserModal user={currentUser} isEditing={isEditing} onSave={handleSaveUser} onClose={() => setShowModal(false)} />}
+                </div>
+            );
+        };
+        
+        const UserModal = ({ user, isEditing, onSave, onClose }) => {
+            const [formData, setFormData] = useState(user);
+            const allPages = ['dashboard', 'pos', 'inventory', 'orders', 'users', 'suppliers', 'settings'];
+
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handlePermissionChange = (e) => {
+                const { value, checked } = e.target;
+                let newAllowedPages = [...formData.allowedPages];
+                if (checked) {
+                    newAllowedPages.push(value);
+                } else {
+                    newAllowedPages = newAllowedPages.filter(page => page !== value);
+                }
+                setFormData(prev => ({ ...prev, allowedPages: newAllowedPages }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                onSave(formData);
+            };
+
+            const renderRoleSpecificFields = () => {
+                if (formData.role === 'staff') {
+                    return (
+                        <React.Fragment>
+                            <div className="mb-4"><label className="block">Address</label><input type="text" name="address" value={formData.address || ''} onChange={handleChange} className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Mobile No.</label><input type="text" name="mobile" value={formData.mobile || ''} onChange={handleChange} className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Emergency No.</label><input type="text" name="emergencyMobile" value={formData.emergencyMobile || ''} onChange={handleChange} className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Salary</label><input type="number" name="salary" value={formData.salary || ''} onChange={handleChange} className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Experience</label><input type="text" name="experience" value={formData.experience || ''} onChange={handleChange} className="form-input" /></div>
+                        </React.Fragment>
+                    );
+                }
+                if (formData.role === 'seller') {
+                     return (
+                        <React.Fragment>
+                            <div className="mb-4"><label className="block">Address</label><input type="text" name="address" value={formData.address || ''} onChange={handleChange} className="form-input" /></div>
+                             <div className="mb-4"><label className="block">Merchant Name</label><input type="text" name="merchantName" value={formData.merchantName || ''} onChange={handleChange} className="form-input" /></div>
+                             <div className="mb-4"><label className="block">Supply Items</label><input type="text" name="supplyItems" value={formData.supplyItems || ''} onChange={handleChange} className="form-input" /></div>
+                             <div className="mb-4"><label className="block">Mobile No.</label><input type="text" name="mobile" value={formData.mobile || ''} onChange={handleChange} className="form-input" /></div>
+                        </React.Fragment>
+                    );
+                }
+                if (formData.role === 'customer') {
+                    return (
+                         <React.Fragment>
+                            <div className="mb-4"><label className="block">Phone Number</label><input type="text" name="phone" value={formData.phone || ''} onChange={handleChange} className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Loyalty Points</label><input type="number" name="loyaltyPoints" value={formData.loyaltyPoints || 0} onChange={handleChange} className="form-input" /></div>
+                         </React.Fragment>
+                    )
+                }
+                return null;
+            }
+
+            return (
+                <div className="fixed inset-0 flex items-center justify-center z-40 glass-modal-container">
+                    <div className="w-full max-w-lg mx-auto glass-modal-content max-h-[90vh] overflow-y-auto">
+                        <h2 className="text-2xl font-bold mb-4">{isEditing ? 'Edit User' : 'Add New User'}</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                {isEditing && <div className="mb-4"><label className="block">User ID</label><input type="text" value={formData.id} disabled className="form-input" /></div>}
+                                <div className="mb-4"><label className="block">Username</label><input type="text" name="username" value={formData.username} onChange={handleChange} required className="form-input" /></div>
+                                <div className="mb-4"><label className="block">Full Name</label><input type="text" name="name" value={formData.name} onChange={handleChange} required className="form-input" /></div>
+                                <div className="mb-4"><label className="block">Password</label><input type="password" name="password" value={formData.password} onChange={handleChange} placeholder={isEditing ? 'Leave blank to keep unchanged' : ''} required={!isEditing} className="form-input" /></div>
+                                <div className="mb-4"><label className="block">Role</label><select name="role" value={formData.role} onChange={handleChange} className="form-input"><option value="customer">Customer</option><option value="staff">Staff</option><option value="seller">Seller</option><option value="admin">Admin</option><option value="owner">Owner</option></select></div>
+                                <div className="mb-4"><label className="block">Max Discount (%)</label><input type="number" name="maxDiscount" value={formData.maxDiscount} onChange={handleChange} required className="form-input" /></div>
+                            </div>
+                             <div>
+                                <div className="mb-4">
+                                    <label className="block">Page Permissions</label>
+                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                        {allPages.map(page => (
+                                            <label key={page} className="flex items-center">
+                                                <input type="checkbox" value={page} checked={formData.allowedPages.includes(page)} onChange={handlePermissionChange} className="form-checkbox"/>
+                                                <span className="ml-2 capitalize">{page}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                                {renderRoleSpecificFields()}
+                            </div>
+                        </div>
+                        <div className="flex justify-end mt-6"><button type="button" onClick={onClose} className="btn btn-secondary py-2 px-4 mr-2">Cancel</button><button onClick={handleSubmit} type="button" className="btn btn-primary py-2 px-4">Save</button></div>
+                    </div>
+                </div>
+            );
+        };
+        
+        const SuppliersPage = ({ user }) => {
+            const [suppliers, setSuppliers] = useState({});
+            const [isLoading, setIsLoading] = useState(true);
+            const [error, setError] = useState('');
+            const [showModal, setShowModal] = useState(false);
+            const [currentSupplier, setCurrentSupplier] = useState(null);
+            const [isEditing, setIsEditing] = useState(false);
+            const [alertModal, setAlertModal] = useState({ isOpen: false });
+            const { data: filteredSuppliers, setSearchTerm, requestSort, sortConfig } = useTableData(suppliers);
+
+            const fetchSuppliers = useCallback(async () => {
+                setIsLoading(true);
+                try {
+                    const response = await fetch('http://localhost:3004/suppliers');
+                    setSuppliers(await response.json());
+                } catch (e) {
+                    setError('Failed to fetch suppliers. Is the Supplier Service running?');
+                } finally {
+                    setIsLoading(false);
+                }
+            }, []);
+
+            useEffect(() => { fetchSuppliers(); }, [fetchSuppliers]);
+
+            const handleAddSupplier = () => {
+                setIsEditing(false);
+                setCurrentSupplier({ name: '', contactPerson: '', phone: '', email: '', address: '', supplies: '' });
+                setShowModal(true);
+            };
+
+            const handleEditSupplier = (id) => {
+                setIsEditing(true);
+                setCurrentSupplier({ ...suppliers[id], id });
+                setShowModal(true);
+            };
+            
+            const handleDeleteSupplier = (id) => {
+                 setAlertModal({
+                    isOpen: true, title: 'Confirm Deletion',
+                    message: `Are you sure you want to delete supplier "${suppliers[id].name}"?`,
+                    onConfirm: () => { proceedWithDelete(id); setAlertModal({ isOpen: false }); },
+                    onCancel: () => setAlertModal({ isOpen: false })
+                });
+            };
+
+            const proceedWithDelete = async (id) => {
+                try {
+                    const response = await fetch(`http://localhost:3004/suppliers/${id}`, { method: 'DELETE' });
+                    if (!response.ok) throw new Error('Failed to delete supplier.');
+                    setAlertModal({ isOpen: true, title: 'Success', message: 'Supplier deleted!', showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchSuppliers(); } });
+                } catch (err) {
+                    setAlertModal({ isOpen: true, title: 'Error', message: 'Error deleting supplier.', showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+
+            const handleSaveSupplier = async (supplierData) => {
+                const url = isEditing ? `http://localhost:3004/suppliers/${supplierData.id}` : 'http://localhost:3004/suppliers';
+                const method = isEditing ? 'PUT' : 'POST';
+                try {
+                     const response = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(supplierData) });
+                     if (!response.ok) throw new Error('Failed to save supplier.');
+                     setShowModal(false);
+                     setAlertModal({ isOpen: true, title: 'Success', message: `Supplier ${isEditing ? 'updated' : 'added'}!`, showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); fetchSuppliers(); } });
+                } catch(err) {
+                     setAlertModal({ isOpen: true, title: 'Error', message: `Error: ${err.message}`, showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                }
+            };
+            
+            const getSortIndicator = (key) => sortConfig.key === key ? (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼') : '';
+            
+            if (isLoading) return <Spinner />;
+            if (error) return <p className="card p-4 text-red-500">{error}</p>;
+
+            return (
+                <div className="container mx-auto">
+                    {alertModal.isOpen && <ActionModal {...alertModal} />}
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-semibold">Supplier Management</h2>
+                        <button onClick={handleAddSupplier} className="btn btn-primary py-2 px-4"><i className="fas fa-plus mr-2"></i>Add New Supplier</button>
+                    </div>
+                     <div className="card p-4 mb-6 hover:transform-none">
+                        <input type="text" placeholder="Search suppliers..." onChange={(e) => setSearchTerm(e.target.value)} className="form-input" />
+                    </div>
+                    <div className="card overflow-x-auto">
+                        <table className="min-w-full leading-normal">
+                             <thead><tr>
+                                <th onClick={() => requestSort('id')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">ID{getSortIndicator('id')}</th>
+                                <th onClick={() => requestSort('name')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Name{getSortIndicator('name')}</th>
+                                <th onClick={() => requestSort('contactPerson')} className="cursor-pointer px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Contact{getSortIndicator('contactPerson')}</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Phone</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Supplies</th>
+                                <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+                            </tr></thead>
+                            <tbody>
+                                {filteredSuppliers.map(([id, supplier]) => (
+                                    <tr key={id}>
+                                        <td className="px-5 py-5 border-b text-sm">{id}</td>
+                                        <td className="px-5 py-5 border-b text-sm">{supplier.name}</td>
+                                        <td className="px-5 py-5 border-b text-sm">{supplier.contactPerson}</td>
+                                        <td className="px-5 py-5 border-b text-sm">{supplier.phone}</td>
+                                        <td className="px-5 py-5 border-b text-sm">{supplier.supplies}</td>
+                                        <td className="px-5 py-5 border-b text-sm">
+                                            <button onClick={() => handleEditSupplier(id)} className="text-blue-500 hover:text-blue-700 mr-4">Edit</button>
+                                            <button onClick={() => handleDeleteSupplier(id)} className="text-red-500 hover:text-red-700">Delete</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {showModal && <SupplierModal supplier={currentSupplier} isEditing={isEditing} onSave={handleSaveSupplier} onClose={() => setShowModal(false)}/>}
+                </div>
+            )
+        };
+        
+        const SupplierModal = ({ supplier, isEditing, onSave, onClose }) => {
+            const [formData, setFormData] = useState(supplier);
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                onSave(formData);
+            };
+            return (
+                 <div className="fixed inset-0 flex items-center justify-center z-40 glass-modal-container">
+                    <div className="w-full max-w-md mx-auto glass-modal-content">
+                        <h2 className="text-2xl font-bold mb-4">{isEditing ? 'Edit Supplier' : 'Add New Supplier'}</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-4"><label className="block">Supplier Name</label><input type="text" name="name" value={formData.name} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Contact Person</label><input type="text" name="contactPerson" value={formData.contactPerson} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Phone</label><input type="text" name="phone" value={formData.phone} onChange={handleChange} required className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Email</label><input type="email" name="email" value={formData.email} onChange={handleChange} className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Address</label><input type="text" name="address" value={formData.address} onChange={handleChange} className="form-input" /></div>
+                            <div className="mb-4"><label className="block">Supplies (comma-separated)</label><input type="text" name="supplies" value={formData.supplies} onChange={handleChange} required className="form-input" /></div>
+                            <div className="flex justify-end mt-6"><button type="button" onClick={onClose} className="btn btn-secondary py-2 px-4 mr-2">Cancel</button><button type="submit" className="btn btn-primary py-2 px-4">Save</button></div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+        
+        const SettingsPage = ({ user, onSettingsUpdate, currentSettings }) => {
+            const [settings, setSettings] = useState(currentSettings);
+            const [isLoading, setIsLoading] = useState(false);
+            const [alertModal, setAlertModal] = useState({ isOpen: false });
+
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setSettings(prev => ({...prev, [name]: value}));
+            };
+            
+            const handleLogoUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setSettings(prev => ({...prev, logo: reader.result}));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const handleSave = async () => {
+                setIsLoading(true);
+                try {
+                    const response = await fetch('http://localhost:3005/settings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(settings)
+                    });
+                    if (!response.ok) throw new Error('Failed to save settings');
+                    setAlertModal({ isOpen: true, title: "Success", message: "Settings saved successfully!", showCancel: false, onConfirm: () => { setAlertModal({isOpen: false}); onSettingsUpdate(); } });
+                } catch(e) {
+                    setAlertModal({ isOpen: true, title: "Error", message: "Failed to save settings.", showCancel: false, onConfirm: () => setAlertModal({isOpen: false}) });
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            
+            if (!user.allowedPages.includes('settings')) {
+                return <div className="text-red-500 bg-red-100 p-4 rounded-lg">You do not have permission to view this page.</div>
+            }
+            if (!settings) return <Spinner />;
+
+            return (
+                <div className="container mx-auto">
+                    {alertModal.isOpen && <ActionModal {...alertModal} />}
+                    <h2 className="text-2xl font-semibold mb-6">System & Brand Settings</h2>
+                    <div className="card p-6 max-w-2xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Branding</h3>
+                                <div className="mb-4">
+                                    <label className="block mb-1">Store Name</label>
+                                    <input type="text" name="storeName" value={settings.storeName} onChange={handleChange} className="form-input" />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block mb-1">Owner Name</label>
+                                    <input type="text" name="ownerName" value={settings.ownerName || ''} onChange={handleChange} className="form-input" />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block mb-1">Store Address</label>
+                                    <input type="text" name="storeAddress" value={settings.storeAddress} onChange={handleChange} className="form-input" />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block mb-1">Bill Footer Message</label>
+                                    <input type="text" name="footerMessage" value={settings.footerMessage} onChange={handleChange} className="form-input" />
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Logo & Background</h3>
+                                <div className="mb-4">
+                                    <label className="block mb-1">Upload Logo</label>
+                                    <input type="file" onChange={handleLogoUpload} accept="image/*" className="form-input" />
+                                    {settings.logo && <img src={settings.logo} alt="Logo Preview" className="mt-4 h-20 w-auto rounded-lg"/>}
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="opacity-range" className="block mb-1">Background Logo Opacity ({Math.round(settings.backgroundOpacity * 100)}%)</label>
+                                    <input id="opacity-range" type="range" name="backgroundOpacity" min="0" max="0.2" step="0.01" value={settings.backgroundOpacity} onChange={handleChange} className="w-full" />
+                                </div>
+                            </div>
+                        </div>
+                         <div className="flex justify-end mt-6 border-t pt-4">
+                            <button onClick={handleSave} disabled={isLoading} className="btn btn-primary py-2 px-4 disabled:opacity-50">
+                                {isLoading ? 'Saving...' : 'Save Settings'}
+                            </button>
+                         </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,21 @@
+{
+  "suppliers": {
+    "SUP-0004": {
+      "name": "qq",
+      "contactPerson": "qq",
+      "phone": "qq",
+      "email": "qq@gmail.com",
+      "address": "qq",
+      "supplies": "qq"
+    },
+    "SUP-0005": {
+      "name": "ww",
+      "contactPerson": "ww",
+      "phone": "ww",
+      "email": "ww@gmail.com",
+      "address": "qw",
+      "supplies": "qwe"
+    }
+  },
+  "lastSupplierId": 5
+}

@@ -1,0 +1,870 @@
+{
+  "orders": [
+    {
+      "orderId": "ORD-1757757728222",
+      "timestamp": 1757757728222,
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 3.5,
+          "stock": 95,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 74,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Chocolate",
+          "price": 5,
+          "stock": 58,
+          "sku": "1006",
+          "qty": 1
+        }
+      ],
+      "subtotal": 11.25,
+      "tax": 0.5625,
+      "total": 11.8125,
+      "discount": 0,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "",
+        "phone": ""
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "ORD-1757754416772",
+      "timestamp": 1757754416772,
+      "items": [
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 75,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Cheddar Cheese",
+          "price": 5,
+          "stock": 58,
+          "sku": "1004",
+          "qty": 1
+        }
+      ],
+      "subtotal": 7.75,
+      "tax": 0.3875,
+      "total": 8.1375,
+      "discount": 0,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "",
+        "phone": ""
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "ORD-1757752961913",
+      "timestamp": 1757752961913,
+      "items": [
+        {
+          "name": "Cheddar Cheese",
+          "price": 5,
+          "stock": 59,
+          "sku": "1004",
+          "qty": 1
+        },
+        {
+          "name": "Chocolate",
+          "price": 5,
+          "stock": 59,
+          "sku": "1006",
+          "qty": 1
+        }
+      ],
+      "subtotal": 10,
+      "tax": 0.5,
+      "total": 10.5,
+      "discount": 0,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "",
+        "phone": ""
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "ORD-1757751552044",
+      "timestamp": 1757751552044,
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 3.5,
+          "stock": 96,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 76,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 4.15,
+          "stock": 116,
+          "sku": "1003",
+          "qty": 1
+        },
+        {
+          "name": "Chocolate",
+          "price": 5,
+          "stock": 60,
+          "sku": "1006",
+          "qty": 1
+        }
+      ],
+      "subtotal": 15.4,
+      "tax": 0.7546,
+      "total": 15.8466,
+      "discount": 2,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "qwer",
+        "phone": "1234"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "ORD-1757696341719",
+      "timestamp": 1757696341719,
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 3.5,
+          "stock": 97,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 77,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 4.15,
+          "stock": 117,
+          "sku": "1003",
+          "qty": 1
+        }
+      ],
+      "subtotal": 10.4,
+      "tax": 0.52,
+      "total": 10.92,
+      "discount": 0,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "abc",
+        "phone": "123"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "ORD-1757695936090",
+      "timestamp": 1757695936090,
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 3.5,
+          "stock": 98,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 78,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 4.15,
+          "stock": 118,
+          "sku": "1003",
+          "qty": 1
+        }
+      ],
+      "subtotal": 10.4,
+      "tax": 0.52,
+      "total": 10.92,
+      "discount": 0,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "abc",
+        "phone": "123"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "ORD-1757695877477",
+      "timestamp": 1757695877477,
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 3.5,
+          "stock": 99,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 79,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 4.15,
+          "stock": 119,
+          "sku": "1003",
+          "qty": 1
+        }
+      ],
+      "subtotal": 10.4,
+      "tax": 0.5096,
+      "total": 10.701600000000001,
+      "discount": 2,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "a",
+        "phone": "aa"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "ORD-1757694998656",
+      "timestamp": 1757694998656,
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 3.5,
+          "stock": 100,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 80,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 4.15,
+          "stock": 120,
+          "sku": "1003",
+          "qty": 1
+        },
+        {
+          "name": "Cheddar Cheese",
+          "price": 5,
+          "stock": 60,
+          "sku": "1004",
+          "qty": 1
+        }
+      ],
+      "subtotal": 15.4,
+      "tax": 0.7546,
+      "total": 15.8466,
+      "discount": 2,
+      "cashier": {
+        "name": "Admin User",
+        "username": "admin"
+      },
+      "customerDetails": {
+        "name": "Rohan",
+        "phone": "2845y9340"
+      },
+      "status": "COMPLETED"
+    },
+    {
+      "orderId": "Pa6zj-9s",
+      "timestamp": "2025-09-13T13:27:25.907Z",
+      "status": "CANCELLED",
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 3.5,
+          "stock": 90,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 2.75,
+          "stock": 80,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 4.15,
+          "stock": 120,
+          "sku": "1003",
+          "qty": 1
+        }
+      ],
+      "subtotal": 10.4,
+      "tax": 0.52,
+      "total": 10.92,
+      "user": {
+        "username": "admin",
+        "password": "123",
+        "name": "Admin User",
+        "role": "admin",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users"
+        ]
+      },
+      "discount": 0,
+      "customerDetails": {
+        "name": "Rohan Erripuk",
+        "phone": "123456778"
+      }
+    },
+    {
+      "orderId": null,
+      "timestamp": "2025-09-13T14:26:30.774Z",
+      "status": "COMPLETED",
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 140,
+          "stock": 100,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 45,
+          "stock": 80,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 70,
+          "stock": 120,
+          "sku": "1003",
+          "qty": 1
+        },
+        {
+          "name": "Cheddar Cheese",
+          "price": 250,
+          "stock": 60,
+          "sku": "1004",
+          "qty": 1
+        }
+      ],
+      "subtotal": 505,
+      "tax": 25.25,
+      "total": 530.25,
+      "user": {
+        "id": "ADM-00001",
+        "username": "admin",
+        "password": "123",
+        "name": "Admin User",
+        "role": "admin",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users"
+        ]
+      },
+      "discount": 0,
+      "customerDetails": {
+        "name": "abc",
+        "phone": "123"
+      }
+    },
+    {
+      "orderId": "ORD-20250913-0001",
+      "timestamp": "2025-09-13T14:52:03.013Z",
+      "status": "EDITED",
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 140,
+          "stock": 99,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 45,
+          "stock": 79,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Cheddar Cheese",
+          "price": 250,
+          "stock": 59,
+          "sku": "1004",
+          "qty": 4
+        }
+      ],
+      "subtotal": 1185,
+      "tax": 59.25,
+      "total": 1244.25,
+      "user": {
+        "id": "A1001",
+        "username": "admin",
+        "password": "123",
+        "name": "Admin User",
+        "role": "admin",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users"
+        ]
+      },
+      "discount": 5,
+      "customerDetails": {
+        "name": "likhit",
+        "phone": "0193284756"
+      }
+    },
+    {
+      "orderId": "ORD-20250913-0002",
+      "timestamp": "2025-09-13T15:20:08.480Z",
+      "status": "COMPLETED",
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 140,
+          "stock": 99,
+          "sku": "1001",
+          "qty": 2
+        },
+        {
+          "name": "White Bread",
+          "price": 45,
+          "stock": 79,
+          "sku": "1002",
+          "qty": 2
+        },
+        {
+          "name": "Cheddar Cheese",
+          "price": 250,
+          "stock": 56,
+          "sku": "1004",
+          "qty": 1
+        }
+      ],
+      "subtotal": 620,
+      "tax": 31,
+      "total": 651,
+      "user": {
+        "id": "A1001",
+        "username": "admin",
+        "password": "123",
+        "name": "Admin User",
+        "role": "admin",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users"
+        ]
+      },
+      "discount": 0,
+      "customerDetails": {
+        "name": "abc",
+        "phone": "1320856344"
+      }
+    },
+    {
+      "orderId": "ORD-20250914-0001",
+      "timestamp": "2025-09-13T20:33:26.454Z",
+      "status": "COMPLETED",
+      "items": [
+        {
+          "name": "Ginger 1/2",
+          "price": 50,
+          "sku": "CUSTOM-1757795523010",
+          "qty": 1
+        },
+        {
+          "name": "Whole Milk",
+          "price": 140,
+          "stock": 97,
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 45,
+          "stock": 77,
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 70,
+          "stock": 120,
+          "sku": "1003",
+          "qty": 1
+        }
+      ],
+      "subtotal": 305,
+      "tax": 15.25,
+      "total": 320.25,
+      "user": {
+        "id": "A1001",
+        "username": "admin",
+        "password": "123",
+        "name": "Admin User",
+        "role": "admin",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users"
+        ]
+      },
+      "discount": 0,
+      "customerDetails": {
+        "name": "abc",
+        "phone": "123456780"
+      }
+    },
+    {
+      "orderId": "ORD-20250914-0002",
+      "timestamp": "2025-09-13T20:40:18.541Z",
+      "status": "EDITED",
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 140,
+          "stock": 96,
+          "sku": "1001",
+          "qty": 2
+        },
+        {
+          "name": "White Bread",
+          "price": 45,
+          "stock": 76,
+          "sku": "1002",
+          "qty": 1
+        }
+      ],
+      "subtotal": 325,
+      "tax": 16.25,
+      "total": 341.25,
+      "user": {
+        "id": "O1001",
+        "username": "owner",
+        "password": "123",
+        "name": "Store Owner",
+        "role": "owner",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users",
+          "settings"
+        ]
+      },
+      "discount": 0,
+      "customerDetails": {
+        "name": "abc",
+        "phone": "1234567890"
+      }
+    },
+    {
+      "orderId": "#ORD-20250917-0001",
+      "timestamp": "2025-09-17T14:58:15.395Z",
+      "status": "COMPLETED",
+      "items": [
+        {
+          "name": "Whole Milk",
+          "price": 140,
+          "stock": 95,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0002",
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 45,
+          "stock": 75,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0001",
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 70,
+          "stock": 119,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0002",
+          "sku": "1003",
+          "qty": 1
+        }
+      ],
+      "subtotal": 255,
+      "tax": 12.495000000000001,
+      "total": 262.395,
+      "user": {
+        "id": "O1001",
+        "username": "owner",
+        "password": "123",
+        "name": "Store Owner",
+        "role": "owner",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users",
+          "suppliers",
+          "settings"
+        ]
+      },
+      "discount": 2,
+      "customerDetails": {
+        "name": "Likhit",
+        "phone": "1234567890"
+      }
+    },
+    {
+      "orderId": "#ORD-20250917-0002",
+      "timestamp": "2025-09-17T14:58:45.819Z",
+      "status": "COMPLETED",
+      "items": [
+        {
+          "name": "White Bread",
+          "price": 45,
+          "stock": 75,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0001",
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 70,
+          "stock": 119,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0002",
+          "sku": "1003",
+          "qty": 1
+        },
+        {
+          "name": "Cheddar Cheese",
+          "price": 250,
+          "stock": 54,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0002",
+          "sku": "1004",
+          "qty": 1
+        }
+      ],
+      "subtotal": 365,
+      "tax": 18.25,
+      "total": 383.25,
+      "user": {
+        "id": "O1001",
+        "username": "owner",
+        "password": "123",
+        "name": "Store Owner",
+        "role": "owner",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users",
+          "suppliers",
+          "settings"
+        ]
+      },
+      "discount": 0,
+      "customerDetails": {
+        "name": "",
+        "phone": ""
+      }
+    },
+    {
+      "orderId": "#ORD-20250917-0003",
+      "timestamp": "2025-09-17T15:03:26.048Z",
+      "status": "COMPLETED",
+      "items": [
+        {
+          "name": "Milk - 1L",
+          "price": 100,
+          "cost": 40,
+          "stock": 94,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0002",
+          "sku": "1001",
+          "qty": 1
+        }
+      ],
+      "subtotal": 100,
+      "tax": 5,
+      "total": 105,
+      "user": {
+        "id": "O1001",
+        "username": "owner",
+        "password": "123",
+        "name": "Store Owner",
+        "role": "owner",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users",
+          "suppliers",
+          "settings"
+        ]
+      },
+      "discount": 0,
+      "customerDetails": {
+        "name": "",
+        "phone": ""
+      }
+    },
+    {
+      "orderId": "#ORD-20250926-0001",
+      "timestamp": "2025-09-26T14:22:31.044Z",
+      "status": "COMPLETED",
+      "items": [
+        {
+          "name": "Milk - 1L",
+          "price": 100,
+          "cost": 40,
+          "stock": 92,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0002",
+          "sku": "1001",
+          "qty": 1
+        },
+        {
+          "name": "White Bread",
+          "price": 45,
+          "cost": 25,
+          "stock": 73,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0001",
+          "sku": "1002",
+          "qty": 1
+        },
+        {
+          "name": "Eggs (Dozen)",
+          "price": 120,
+          "cost": 90,
+          "stock": 117,
+          "lowStockThreshold": 20,
+          "supplierId": "SUP-0002",
+          "sku": "1003",
+          "qty": 1
+        }
+      ],
+      "subtotal": 265,
+      "tax": 12.5875,
+      "total": 264.3375,
+      "user": {
+        "id": "O1001",
+        "username": "owner",
+        "password": "123",
+        "name": "Store Owner",
+        "role": "owner",
+        "maxDiscount": 100,
+        "allowedPages": [
+          "dashboard",
+          "pos",
+          "inventory",
+          "orders",
+          "users",
+          "suppliers",
+          "settings"
+        ]
+      },
+      "discount": 5,
+      "customerDetails": {
+        "name": "Venkateswara Rao",
+        "phone": "1234567890"
+      }
+    }
+  ],
+  "lastOrderId": null,
+  "lastOrderCounters": {
+    "20250913": 2,
+    "20250914": 2,
+    "20250917": 3,
+    "20250926": 1
+  },
+  "billSettings": {
+    "storeName": "OMNI-MART",
+    "storeAddress": "DownTown, Vancouver, Canada",
+    "footerMessage": "Thank You for Your Purchase! Visit Again!😊"
+  }
+}

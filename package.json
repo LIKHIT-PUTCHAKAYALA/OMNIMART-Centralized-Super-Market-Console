@@ -1,0 +1,21 @@
+{
+  "name": "supermarket-system",
+  "version": "1.0.0",
+  "description": "Titan Supermarket Management System",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx concurrently \"node auth-service.js\" \"node inventory-service.js\" \"node order-service.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "lowdb": "^7.0.1",
+    "nanoid": "^5.0.7",
+    "node-fetch": "^3.3.2"
+  }
+}
